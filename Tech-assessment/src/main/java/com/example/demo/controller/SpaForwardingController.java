@@ -1,14 +1,15 @@
 package com.example.demo.controller;
 
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class SpaForwardingController {
+public class SpaForwardingController implements ErrorController {
 
-    // Forward all non-api, non-static paths to index.html
-    @RequestMapping(value = { "/", "/{x:[\\w\\-]+}", "/{x:^(?!api$).*$}/**/{y:[\\w\\-]+}" })
-    public String forward() {
+    @RequestMapping("/error")
+    public String handleError() {
+        // Forward all 404 errors (or any unhandled error) to the SPA's index.html
         return "forward:/index.html";
     }
 }
