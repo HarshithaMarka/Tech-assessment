@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - TaskPro</title>
+
+    <style>
+
+        body{
+            margin:0;
+            font-family:Arial;
+            background:#f4f7fb;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+        }
+
+        .container{
+            width:400px;
+            background:white;
+            padding:40px;
+            border-radius:10px;
+            box-shadow:0 0 15px rgba(0,0,0,0.1);
+        }
+
+        h2{
+            text-align:center;
+            color:#1f3c88;
+        }
+
+        input,select{
+            width:100%;
+            padding:12px;
+            margin-top:15px;
+            border:1px solid #ccc;
+            border-radius:5px;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            margin-top:20px;
+            border:none;
+            background:#28a745;
+            color:white;
+            border-radius:5px;
+            font-size:16px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#218838;
+        }
+
+        p{
+            text-align:center;
+            margin-top:15px;
+        }
+
+        a{
+            text-decoration:none;
+            color:#1f3c88;
+            font-weight:bold;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Create Account</h2>
+
+    <form id="registerForm">
+
+        <input type="text"
+               id="name"
+               placeholder="Enter Name"
+               required>
+
+        <input type="email"
+               id="email"
+               placeholder="Enter Email"
+               required>
+
+        <input type="password"
+               id="password"
+               placeholder="Enter Password"
+               required>
+
+        <select id="role">
+
+            <option value="ROLE_MEMBER">MEMBER</option>
+            <option value="ROLE_ADMIN">ADMIN</option>
+
+        </select>
+
+        <button type="submit">Register</button>
+
+    </form>
+
+    <p>
+        Already have account?
+        <a href="/login.html">Login</a>
+    </p>
+
+</div>
+
+<script>
+
+document.getElementById("registerForm")
+.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const user = {
+
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+        role: document.getElementById("role").value
+
+    };
+
+    const response = await fetch("/auth/register", {
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify(user)
+
+    });
+
+    if(response.ok){
+
+        alert("Registration Successful");
+
+        window.location.href="/login.html";
+
+    }else{
+
+        alert("Registration Failed");
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,549 @@
+<!-- REPLACE YOUR COMPLETE index.html WITH THIS -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TaskPro Dashboard</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+}
+
+/* NAVBAR */
+
+.navbar{
+    background:linear-gradient(90deg,#1f3c88,#4a63d8);
+    padding:20px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:white;
+}
+
+.navbar h1{
+    font-size:30px;
+}
+
+.logout-btn{
+    padding:12px 20px;
+    border:none;
+    border-radius:8px;
+    background:#ff4d4d;
+    color:white;
+    cursor:pointer;
+}
+
+/* DASHBOARD */
+
+.dashboard{
+    padding:35px;
+}
+
+/* CARDS */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+    margin-bottom:35px;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.08);
+}
+
+.card h2{
+    color:#1f3c88;
+    margin-bottom:10px;
+}
+
+.card p{
+    font-size:35px;
+    font-weight:bold;
+}
+
+/* CONTAINERS */
+
+.container{
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    margin-bottom:35px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.08);
+}
+
+.container h2{
+    margin-bottom:20px;
+    color:#1f3c88;
+}
+
+/* INPUTS */
+
+input,
+textarea,
+select{
+    width:100%;
+    padding:14px;
+    margin-top:15px;
+    border:1px solid #ccc;
+    border-radius:8px;
+}
+
+textarea{
+    min-height:100px;
+}
+
+button{
+    margin-top:20px;
+    padding:14px 22px;
+    border:none;
+    border-radius:8px;
+    background:#1f3c88;
+    color:white;
+    cursor:pointer;
+    font-size:15px;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+/* TABLE */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+table th{
+    background:#1f3c88;
+    color:white;
+    padding:15px;
+    text-align:left;
+}
+
+table td{
+    padding:15px;
+    border-bottom:1px solid #ddd;
+    background:white;
+}
+
+.status-pending{
+    color:orange;
+    font-weight:bold;
+}
+
+.status-progress{
+    color:#007bff;
+    font-weight:bold;
+}
+
+.status-completed{
+    color:green;
+    font-weight:bold;
+}
+
+@media(max-width:768px){
+
+    table{
+        display:block;
+        overflow-x:auto;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+    <h1>TaskPro Dashboard</h1>
+
+    <form action="/logout" method="post">
+        <button class="logout-btn">Logout</button>
+    </form>
+
+</div>
+<div class="dashboard">
+    <!-- DASHBOARD CARDS -->
+
+    <div class="cards">
+
+        <div class="card">
+            <h2>Total Projects</h2>
+            <p id="projectCount">0</p>
+        </div>
+
+        <div class="card">
+            <h2>Total Tasks</h2>
+            <p id="taskCount">0</p>
+        </div>
+
+        <div class="card">
+            <h2>Pending</h2>
+            <p id="pendingCount">0</p>
+        </div>
+
+        <div class="card">
+            <h2>Completed</h2>
+            <p id="completedCount">0</p>
+        </div>
+
+    </div>
+    <!-- CREATE PROJECT -->
+    <div class="container" id="projectSection">
+    <h2>Create Project (Admin)</h2>
+        <form id="projectForm">
+            <input
+                    type="text"
+                    id="projectName"
+                    placeholder="Project Name"
+                    required>
+            <textarea
+                    id="projectDescription"
+                    placeholder="Project Description"
+                    required></textarea>
+
+            <button type="submit">
+                Create Project
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- CREATE TASK -->
+
+    <div class="container">
+
+        <h2>Create & Assign Task</h2>
+
+        <form id="taskForm">
+
+            <input
+                    type="text"
+                    id="title"
+                    placeholder="Task Title"
+                    required>
+
+            <textarea
+                    id="description"
+                    placeholder="Task Description"
+                    required></textarea>
+
+            <select id="status">
+
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+            </select>
+            <input
+                    type="text"
+                    id="assignedTo"
+                    placeholder="Assign To Member"
+                    required>
+            <select id="projectSelect">
+            </select>
+            <button type="submit">
+                Assign Task
+            </button>
+        </form>
+    </div>
+    <!-- PROJECT TABLE -->
+    <div class="container">
+        <h2>Projects</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Project Name</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody id="projectTableBody">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- TASK TABLE -->
+
+    <div class="container">
+
+        <h2>All Tasks</h2>
+
+        <table>
+
+            <thead>
+
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Assigned To</th>
+                <th>Project</th>
+                <th>Actions</th>
+            </tr>
+
+            </thead>
+
+            <tbody id="taskTableBody">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script>
+
+/* ---------------- PROJECTS ---------------- */
+
+const projectForm = document.getElementById("projectForm");
+
+projectForm.addEventListener("submit", async (e)=>{
+
+    e.preventDefault();
+
+    const project = {
+
+        projectName: document.getElementById("projectName").value,
+        description: document.getElementById("projectDescription").value
+
+    };
+
+    await fetch("/projects",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify(project)
+
+    });
+
+    projectForm.reset();
+
+    loadProjects();
+
+});
+
+/* ---------------- TASKS ---------------- */
+
+const taskForm = document.getElementById("taskForm");
+
+taskForm.addEventListener("submit", async (e)=>{
+
+    e.preventDefault();
+
+   const task = {
+
+    title:
+        document.getElementById("title").value,
+
+    description:
+        document.getElementById("description").value,
+
+    status:
+        document.getElementById("status").value,
+
+    assignedTo:
+        document.getElementById("assignedTo").value,
+
+    projectName:
+        document.getElementById("projectSelect")
+        .options[
+            document.getElementById("projectSelect").selectedIndex
+        ].text
+
+};
+    await fetch("/tasks",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify(task)
+
+    });
+
+    taskForm.reset();
+
+    loadTasks();
+
+});
+
+/* ---------------- LOAD PROJECTS ---------------- */
+
+async function loadProjects(){
+
+    const response = await fetch("/projects");
+
+    const projects = await response.json();
+
+    const tableBody =
+        document.getElementById("projectTableBody");
+
+    const projectSelect =
+        document.getElementById("projectSelect");
+
+    tableBody.innerHTML = "";
+
+    projectSelect.innerHTML = "";
+
+    document.getElementById("projectCount").innerText =
+        projects.length;
+
+    projects.forEach(project=>{
+
+        tableBody.innerHTML += `
+
+            <tr>
+
+                <td>${project.id}</td>
+                <td>${project.projectName}</td>
+                <td>${project.description}</td>
+
+            </tr>
+
+        `;
+
+        projectSelect.innerHTML += `
+
+            <option value="${project.id}">
+                ${project.projectName}
+            </option>
+
+        `;
+
+    });
+
+}
+
+/* ---------------- LOAD TASKS ---------------- */
+
+async function loadTasks(){
+
+    const response = await fetch("/tasks");
+
+    const tasks = await response.json();
+
+    const tableBody =
+        document.getElementById("taskTableBody");
+
+    tableBody.innerHTML = "";
+
+    let pending = 0;
+    let completed = 0;
+
+    document.getElementById("taskCount").innerText =
+        tasks.length;
+
+    tasks.forEach(task=>{
+
+        if(task.status === "Pending"){
+            pending++;
+        }
+
+        if(task.status === "Completed"){
+            completed++;
+        }
+
+        tableBody.innerHTML += `
+
+        <tr>
+
+            <td>${task.id}</td>
+
+            <td>${task.title}</td>
+
+            <td>${task.description}</td>
+
+            <td>${task.status}</td>
+
+            <td>${task.assignedTo}</td>
+
+            <td>${task.projectName || (task.project ? task.project.projectName : "-")}</td>
+
+            <td>
+
+                <button onclick="deleteTask(${task.id})">
+                    Delete
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+    document.getElementById("pendingCount").innerText =
+        pending;
+
+    document.getElementById("completedCount").innerText =
+        completed;
+
+}
+
+/* ---------------- DELETE TASK ---------------- */
+
+async function deleteTask(id){
+
+    await fetch(`/tasks/${id}`,{
+
+        method:"DELETE"
+
+    });
+
+    loadTasks();
+
+}
+
+/* ---------------- INITIAL LOAD ---------------- */
+
+loadProjects();
+
+loadTasks();
+const role = localStorage.getItem("role");
+console.log(role);
+
+if(role === "MEMBER"){
+
+    document.getElementById("projectSection")
+        .style.display = "none";
+
+}
+
+</script>
+
+</body>
+</html>

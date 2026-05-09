@@ -1,0 +1,20 @@
+# Node
+node_modules/
+dist/
+.env
+.DS_Store
+
+# Maven
+Tech-assessment/target/
+Tech-assessment/target/*
+!Tech-assessment/target/classes/
+!Tech-assessment/target/classes/**
+
+*.jar
+*.war
+*.class
+
+# IDEs
+.idea/
+.vscode/
+*.iml

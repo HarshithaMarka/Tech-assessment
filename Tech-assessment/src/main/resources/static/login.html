@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - TaskPro</title>
+
+    <style>
+        body{
+            margin:0;
+            font-family:Arial;
+            background:#f4f7fb;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+        }
+
+        .container{
+            width:350px;
+            background:white;
+            padding:40px;
+            border-radius:10px;
+            box-shadow:0 0 15px rgba(0,0,0,0.1);
+        }
+
+        h2{
+            text-align:center;
+            color:#1f3c88;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            margin-top:15px;
+            border:1px solid #ccc;
+            border-radius:5px;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            margin-top:20px;
+            border:none;
+            background:#1f3c88;
+            color:white;
+            border-radius:5px;
+            font-size:16px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#16316d;
+        }
+
+        p{
+            text-align:center;
+            margin-top:15px;
+        }
+
+        a{
+            text-decoration:none;
+            color:#1f3c88;
+            font-weight:bold;
+        }
+    </style>
+</head>
+
+<script>
+
+const loginForm = document.querySelector("form");
+
+loginForm.addEventListener("submit", function(){
+
+    const email =
+        document.querySelector('input[name="username"]').value;
+
+    if(email === "admin@gmail.com"){
+
+        localStorage.setItem("role","ADMIN");
+
+    }else{
+
+        localStorage.setItem("role","MEMBER");
+
+    }
+
+});
+
+</script>
+<body>
+
+<div class="container">
+
+    <h2>TaskPro Login</h2>
+
+    <form action="/login" method="post">
+
+    <input
+            type="email"
+            name="username"
+            placeholder="Enter Email"
+            required>
+    <input 
+            type="hidden"
+            name="role" 
+            id="role">
+
+    <input
+            type="password"
+            name="password"
+            placeholder="Enter Password"
+            required>
+
+    <button type="submit">
+        Login
+    </button>
+
+</form>
+
+    <p>
+        New User?
+        <a href="/register.html">Register Here</a>
+    </p>
+
+</div>
+
+</body>
+</html>
